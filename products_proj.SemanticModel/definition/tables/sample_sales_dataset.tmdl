@@ -1,0 +1,91 @@
+table sample_sales_dataset
+	lineageTag: c139c4c1-36bb-4221-886b-846795a8277e
+
+	column Order_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f98eff8-6da3-4fce-9b66-91604455e5ff
+		summarizeBy: count
+		sourceColumn: Order_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 839f7d70-4ef5-45a4-b04a-7bba8aa62c50
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: efda2499-de2e-44e2-bff7-d0d5ca91d604
+			defaultHierarchy: LocalDateTable_a686a740-a727-40c7-8da5-086437ea5d5e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Customer
+		dataType: string
+		lineageTag: 150532ff-09c5-4768-a84e-019cd988bbd0
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product
+		dataType: string
+		lineageTag: b74d2725-0a7a-48c5-ad13-42499bd44812
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: c498ec64-07a4-494c-9bf3-4e84ff6b095a
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: e740cabb-a537-4b8f-8029-42be56e0e7a6
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit_Price
+		dataType: int64
+		formatString: 0
+		lineageTag: f205e7db-d4e4-49f8-b4b4-a0acad4800ce
+		summarizeBy: sum
+		sourceColumn: Unit_Price
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Amount
+		dataType: int64
+		formatString: 0
+		lineageTag: a239b4ec-13b7-4dac-abac-f7f7fbf9ca1e
+		summarizeBy: sum
+		sourceColumn: Total_Amount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition sample_sales_dataset = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\prade\Downloads\sample_sales_dataset.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Order_ID", Int64.Type}, {"Date", type date}, {"Customer", type text}, {"Product", type text}, {"Category", type text}, {"Quantity", Int64.Type}, {"Unit_Price", Int64.Type}, {"Total_Amount", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
